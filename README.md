@@ -3,6 +3,10 @@ Booking your tgvmax™ ticket without waiting
 
 ## installation
 
+```
+$> git clone --recurse-submodules
+```
+
 ## how to use
 
 ## tree

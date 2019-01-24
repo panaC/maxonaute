@@ -11,7 +11,7 @@ $> git clone --recurse-submodules https://github.com/panaC/maxonaute.git
 
 ## tree
 
-# under the hood
+# how it works
 
 ## front
 

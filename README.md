@@ -4,7 +4,7 @@ Booking your tgvmax™ ticket without waiting
 ## installation
 
 ```
-$> git clone --recurse-submodules
+$> git clone --recurse-submodules https://github.com/panaC/maxonaute.git
 ```
 
 ## how to use

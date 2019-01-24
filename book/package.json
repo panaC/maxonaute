@@ -1,0 +1,42 @@
+{
+  "name": "max-book",
+  "version": "1.0.0",
+  "description": "microservice booking",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx jest",
+    "build-ts": "cp src/config.json dist/. && cp src/wishes.json dist/. && tsc",
+    "watch-ts": "cp src/config.json dist/. && cp src/wishes.json dist/. && tsc --watch",
+    "install-linter": "npm install -g ts-lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panaC/max-book.git"
+  },
+  "author": "pleroux",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/panaC/max-book/issues"
+  },
+  "homepage": "https://github.com/panaC/max-book#readme",
+  "devDependencies": {
+    "@types/amqplib": "^0.5.9",
+    "@types/jest": "^23.3.10",
+    "@types/jquery": "^3.3.22",
+    "@types/puppeteer": "^1.10.2",
+    "@types/request": "^2.48.1",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "ts-lint": "^4.5.1",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.2.1"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "bufferutil": "^4.0.0",
+    "puppeteer": "^1.11.0",
+    "request": "^2.88.0",
+    "utf-8-validate": "^5.0.1"
+  }
+}

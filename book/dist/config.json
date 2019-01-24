@@ -1,0 +1,7 @@
+{
+  "puppeteer": {
+    "browserless_ip": "35.241.155.87",
+    "browserless_port": "3030",
+    "proxy_url": ""
+  }
+}

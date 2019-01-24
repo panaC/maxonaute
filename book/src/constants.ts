@@ -1,4 +1,5 @@
-export const RABBIT_MQ_URI = "amqp://brqvjuwf:0HoDmXai1j132okoFt_MgNowAj4nXKOx@barnacle.rmq.cloudamqp.com/brqvjuwf";
+// export const RABBIT_MQ_URI = "amqp://brqvjuwf:0HoDmXai1j132okoFt_MgNowAj4nXKOx@barnacle.rmq.cloudamqp.com/brqvjuwf";
+export const RABBIT_MQ_URI = "amqp://localhost";
 
 export const TGV_MAX_API = "https://sncf-simulateur-api-prod.azurewebsites.net/api/RailAvailability/Search/";
 

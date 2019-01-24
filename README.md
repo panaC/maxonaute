@@ -20,6 +20,10 @@ $> git clone --recurse-submodules https://github.com/panaC/maxonaute.git
 ![ticket](https://github.com/panaC/max-front-vue/blob/7c3ddaa344e08b599d18c6b0db74b34f32f06baa/img/ticket.png)
 ![account](https://github.com/panaC/max-front-vue/blob/7c3ddaa344e08b599d18c6b0db74b34f32f06baa/img/account.png)
 
+## back
+
+![swagger](https://github.com/panaC/max-api/blob/337285c812003d9c7de71ea8dc2ab742a8e1ed55/img/swagger.png)
+
 ## max-book
 
 Microservice that call back-end api tickets and check for each of them if a seat is available on ticket

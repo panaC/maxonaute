@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest",
-    "build-ts": "cp src/config.json dist/. && cp src/wishes.json dist/. && tsc",
-    "watch-ts": "cp src/config.json dist/. && cp src/wishes.json dist/. && tsc --watch",
+    "build-ts": "tsc",
+    "watch-ts": "tsc --watch",
     "install-linter": "npm install -g ts-lint"
   },
   "repository": {

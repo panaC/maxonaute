@@ -5,7 +5,7 @@ export const TGV_MAX_API = "https://sncf-simulateur-api-prod.azurewebsites.net/a
 
 export const TOKEN_URL = "https://simulateur.tgvmax.fr/VSC/#/1/";
 
-export const API_URL = "http://localhost:3000/tickets";
+export const API_URL = "http://localhost:3000/tickets/appli";
 
 export const QUEUE_NAME = "task_queue";
 

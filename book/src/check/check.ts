@@ -19,11 +19,16 @@
 import amqp = require("amqplib/callback_api");
 import request = require("request");
 import { API_URL, AUTH_PASS_API, QUEUE_NAME, RABBIT_MQ_URI, TGV_MAX_API, TOKEN_URL } from "../constants";
+import toISOStringLocal from "../date";
 
-interface Iticket {
+interface ITicket {
     origin: string;
+    originCode: string;
     destination: string;
-    departureDate: Date;
+    destinationCode: string;
+    departureDateTime: Date;
+    hccode: string;
+    dateOfBirth: string;
 }
 
 interface Itrain {
@@ -68,7 +73,7 @@ export class Check {
     // Launch the API polling and spread to compute fct to ticket check
     public run(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            request.get(`${API_URL}?pass=${AUTH_PASS_API}`, {
+            request.get(`${API_URL}?credential=${AUTH_PASS_API}`, {
                 headers: {},
             }, (err, rep, body) => {
                 if (err === null && rep && rep.statusCode === 200) {
@@ -108,19 +113,22 @@ export class Check {
     // private fct
     // For each tickets books on the application back-end, check the max API for seek an available sitting place
     private async compute(body: any) {
-        const data: Iticket[] = JSON.parse(body);
-        let train: Itrain = null;
+        const data: ITicket[] = JSON.parse(body);
+        // let train: Itrain = null;
+        console.log(data);
+        
         if (data.length) {
             try {
                 this.token = await this.getToken();
                 await data.forEach(async (element, index) => {
                     try {
-                        element.departureDate = new Date(element.departureDate);
-                        train = await this.seatCount(element);
-                        if (train !== null) {
-                            await this.setTask(train);
-                            await this.delTask(train);
-                            console.log(train);
+                        // element.departureDate = new Date(element.departureDate);
+                        // train = await this.seatCount(element);
+                        if (await this.seatCount(element)) {
+                            console.log("seat available");
+                            await this.setTask(element);
+                            await this.delTask(element);
+                            // console.log(train);
                         }
                     } catch (e) {
                         console.error("Error in ticket handle", e);
@@ -135,7 +143,7 @@ export class Check {
 
     // private fct
     // when the place is available : send spec to MQ channel for booking the ticket on SNCF website
-    private setTask(data: Itrain): Promise<void> {
+    private setTask(data: ITicket): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.mq.then((channel) => {
                 channel.assertQueue(this.qName, { durable: true });
@@ -150,18 +158,13 @@ export class Check {
 
     // private fct
     // When the ticket spec is send to MQ, we can delete on the apllication API Back-end, this ticket in waiting to book
-    private delTask(data: Itrain): Promise<void> {
-        // console.log(this.dateConvert(data.departureDateTime), new Date(this.dateConvert(data.departureDateTime)).toISOString(), data.departureDateTime);
+    private delTask(data: ITicket): Promise<void> {
         return new Promise((resolve, reject) => {
-            request.del(API_URL, {
+            request.del(`${API_URL}?credential=${AUTH_PASS_API}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    origin: encodeURI(data.originName),
-                    destination: encodeURI(data.destinationName),
-                    departureDate: new Date(this.dateConvert(data.departureDateTime)).toISOString(),
-                }),
+                body: JSON.stringify(data),
             }, (err, rep) => {
                 if (err === null && rep && rep.statusCode === 200) {
                     resolve();
@@ -177,14 +180,16 @@ export class Check {
 
     // private fct
     // Call the MAX API with the right ticket spec for checking if a sitting place is available to book
-    private seatCount(data: Iticket): Promise<Itrain> {
-        let ret: Itrain = null;
+    private seatCount(data: ITicket): Promise<boolean> {
+        const url = TGV_MAX_API +
+                encodeURI(data.origin) + "/" +
+                encodeURI(data.destination) + "/" +
+                toISOStringLocal(new Date(data.departureDateTime)) + "/" +
+                toISOStringLocal(new Date(data.departureDateTime));
+                console.log(url);
+                
         return new Promise((resolve, reject) => {
-            request.get(TGV_MAX_API +
-                data.origin + "/" +
-                data.destination + "/" +
-                data.departureDate.toISOString() + "/" +
-                data.departureDate.toISOString(), {
+            request.get(url, {
                     headers: {
                         "ValidityToken": this.token,
                         "Content-Type": "application/json",
@@ -192,16 +197,13 @@ export class Check {
                 }, (err, rep, body) => {
                     if (err === null && rep && rep.statusCode === 200) {
                         const extract: Itrain[] = JSON.parse(body);
-                        resolve(((arr: Itrain[]): Itrain => {
-                            if (arr.length) {
-                                arr.forEach((element) => {
-                                    if (element.availableSeatsCount) {
-                                        ret = element;
-                                    }
-                                });
+                        console.log(extract);
+                        for (const el of extract) {
+                            if (el.availableSeatsCount) {
+                                resolve(true);
                             }
-                            return ret;
-                        })(extract));
+                        }
+                        resolve(false);
                     } else {
                         if (err) { reject("seatCount error " + JSON.stringify(err)); } else {
                             reject("seatCount error " + rep.statusCode);

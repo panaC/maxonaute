@@ -27,10 +27,14 @@ export async function book(id: string, bro: Browser): Promise<Ebook> {
         request.abort();
       }
     });
-    await page.waitForSelector("div.popContent", { timeout: 3000 });
-    await page.$eval("div.popContent", (el) => {
-      el.outerHTML = "";
-    });
+    try {
+      await page.waitForSelector("div.popContent", { timeout: 6000 });
+      await page.$eval("div.popContent", (el) => {
+        el.outerHTML = "";
+      });
+    } catch (err) {
+      console.log("No div.popContent");
+    }
     await page.waitForSelector("div.proposal.has-tgvmax", { timeout: 3000 });
     const select = await page.$$eval("div.proposal.has-tgvmax", (el) => {
       // select the right tgv-max in the list
@@ -97,10 +101,10 @@ export async function book(id: string, bro: Browser): Promise<Ebook> {
 if (require.main === module) {
   const bro = new Browser(BROWSERLESS.browserless_ip, BROWSERLESS.browserless_port, null, "1366x768");
   const spec = ME;
-  spec.mainJourney.origin.code = "CODE";
-  spec.mainJourney.destination.code = "CODE";
-  spec.schedule.outward = "DATE";
-  spec.passengers[0].discountCard.number = "HCCODE";
+  spec.mainJourney.origin.code = "FRACL";
+  spec.mainJourney.destination.code = "FRPMO";
+  spec.schedule.outward = "2019-01-29T06:48:00";
+  spec.passengers[0].discountCard.number = "HC";
   spec.passengers[0].discountCard.dateOfBirth = "01/01/2001";
   wishes(WISHE_URL, spec).then((url) => {
     book(url, bro).then((e) => {

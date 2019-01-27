@@ -24,10 +24,10 @@ export function wishes(url: string, json: any) {
 
 if (require.main === module) {
   const spec = ME;
-  spec.mainJourney.origin.code = "CODE";
-  spec.mainJourney.destination.code = "CODE";
-  spec.schedule.outward = "DATE";
-  spec.passengers[0].discountCard.number = "HCCODE";
+  spec.mainJourney.origin.code = "FRACL";
+  spec.mainJourney.destination.code = "FRPMO";
+  spec.schedule.outward = "2019-01-29T06:48:00";
+  spec.passengers[0].discountCard.number = "HC";
   spec.passengers[0].discountCard.dateOfBirth = "01/01/2001";
   wishes(WISHE_URL, spec).then((data) => {
     console.log(data);

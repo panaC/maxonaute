@@ -22,10 +22,10 @@ export class Browser {
     // '&--disable-dev-shm-usage=true' +
     // '&--disable-accelerated-2d-canvas=true' +
     // '&--disable-gpu=true',
-    this.browser = puppeteer.connect({
-      browserWSEndpoint: line,
-    });
-    // this.browser = puppeteer.launch({ headless: false });
+    // this.browser = puppeteer.connect({
+    //   browserWSEndpoint: line,
+    // });
+    this.browser = puppeteer.launch({ headless: true });
   }
   /**
    * Create a new browserless page
